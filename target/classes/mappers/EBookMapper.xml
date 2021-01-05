@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.briup.estore.mapper.EBookMapper">
+  <resultMap id="BaseResultMap" type="com.briup.estore.bean.EBook">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="price" jdbcType="REAL" property="price" />
+    <result column="category_id" jdbcType="INTEGER" property="categoryId" />
+    <result column="image" jdbcType="VARCHAR" property="image" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from e_book
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.briup.estore.bean.EBook">
+    insert into e_book (id, name, price, 
+      category_id, image)
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{price,jdbcType=REAL}, 
+      #{categoryId,jdbcType=INTEGER}, #{image,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.briup.estore.bean.EBook">
+    update e_book
+    set name = #{name,jdbcType=VARCHAR},
+      price = #{price,jdbcType=REAL},
+      category_id = #{categoryId,jdbcType=INTEGER},
+      image = #{image,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select id, name, price, category_id, image
+    from e_book
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="findBookByName" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  	<bind name="name" value="'%'+name+'%'"/>
+    select id, name, price, category_id, image
+    from e_book
+    where name like #{name}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, name, price, category_id, image
+    from e_book
+  </select>
+</mapper>

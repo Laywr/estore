@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.briup.estore.mapper.EOrderlineMapper">
+  <resultMap id="BaseResultMap" type="com.briup.estore.bean.EOrderline">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="num" jdbcType="INTEGER" property="num" />
+    <result column="book_id" jdbcType="INTEGER" property="bookId" />
+    <result column="order_id" jdbcType="INTEGER" property="orderId" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from e_orderline
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.briup.estore.bean.EOrderline">
+    insert into e_orderline (id, num, book_id, 
+      order_id)
+    values (#{id,jdbcType=INTEGER}, #{num,jdbcType=INTEGER}, #{bookId,jdbcType=INTEGER}, 
+      #{orderId,jdbcType=INTEGER})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.briup.estore.bean.EOrderline">
+    update e_orderline
+    set num = #{num,jdbcType=INTEGER},
+      book_id = #{bookId,jdbcType=INTEGER},
+      order_id = #{orderId,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select id, num, book_id, order_id
+    from e_orderline
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, num, book_id, order_id
+    from e_orderline
+  </select>
+  <insert id="saveOrderLines" parameterType="com.briup.estore.bean.EOrderline">
+    insert into e_orderline (num, book_id, 
+      order_id)
+    values 
+      <foreach collection="lines" item="line" separator=",">
+    (#{line.num,jdbcType=INTEGER}, #{line.book.id,jdbcType=INTEGER}, 
+      #{orderId,jdbcType=INTEGER})
+      </foreach>
+  </insert>
+</mapper>

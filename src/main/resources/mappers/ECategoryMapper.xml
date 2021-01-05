@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.briup.estore.mapper.ECategoryMapper">
+  <resultMap id="BaseResultMap" type="com.briup.estore.bean.ECategory">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="father_id" jdbcType="INTEGER" property="fatherId" />
+  </resultMap>
+  <resultMap id="CateWithSonMap" extends="BaseResultMap" type="com.briup.estore.bean.ECategory">
+    <collection property="sons" resultMap="BaseResultMap" columnPrefix="s_">
+    </collection>
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from e_category
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.briup.estore.bean.ECategory">
+    insert into e_category (id, name, father_id
+      )
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{fatherId,jdbcType=INTEGER}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.briup.estore.bean.ECategory">
+    update e_category
+    set name = #{name,jdbcType=VARCHAR},
+      father_id = #{fatherId,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select id, name, father_id
+    from e_category
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, name, father_id
+    from e_category
+  </select>
+  <select id="selectAllWithSonCategory" resultMap="CateWithSonMap">
+    select f.id,f.name,f.father_id,
+            s.id s_id,s.name s_name,s.father_id s_father_id
+    from e_category f,e_category s
+    where f.id = s.father_id
+  </select>
+</mapper>

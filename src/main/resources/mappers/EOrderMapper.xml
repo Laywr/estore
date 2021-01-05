@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.briup.estore.mapper.EOrderMapper">
+  <resultMap id="BaseResultMap" type="com.briup.estore.bean.EOrder">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="total" jdbcType="REAL" property="total" />
+    <result column="orderDate" jdbcType="TIMESTAMP" property="orderdate" />
+    <result column="customer_id" jdbcType="INTEGER" property="customerId" />
+  </resultMap>
+  <resultMap type="com.briup.estore.bean.EOrder" id="OWithLine" extends="BaseResultMap">
+    <collection property="line" 
+        resultMap="com.briup.estore.mapper.EOrderlineMapper.BaseResultMap"
+        columnPrefix="l_"></collection>
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from e_order
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.briup.estore.bean.EOrder">
+    insert into e_order (id, total, orderDate, 
+      customer_id)
+    values (#{id,jdbcType=INTEGER}, #{total,jdbcType=REAL}, #{orderdate,jdbcType=TIMESTAMP}, 
+      #{customerId,jdbcType=INTEGER})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.briup.estore.bean.EOrder">
+    update e_order
+    set total = #{total,jdbcType=REAL},
+      orderDate = #{orderdate,jdbcType=TIMESTAMP},
+      customer_id = #{customerId,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select id, total, orderDate, customer_id
+    from e_order
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectOrderAndOrderlineByCusId" resultMap="OWithLine">
+    select o.id,o.total,o.orderDate,o.customer_id,l.id l_id,l.num l_num,l.book_id l_book_id,l.order_id l_order_id
+    from e_order o,e_orderline l
+    where o.id = l.order_id and o.customer_id = #{customer_id}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, total, orderDate, customer_id
+    from e_order
+  </select>
+  <insert id="saveOrder" parameterType="com.briup.estore.bean.EOrder"
+        useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+    insert into e_order (total, orderDate, 
+      customer_id)
+    values (#{total,jdbcType=REAL}, #{orderdate,jdbcType=TIMESTAMP}, 
+      #{customerId,jdbcType=INTEGER})
+  </insert>
+</mapper>
